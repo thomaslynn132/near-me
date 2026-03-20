@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  @apply bg-background text-slate-100 antialiased;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+.glass {
+  @apply bg-surface/80 backdrop-blur-lg border border-white/10;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

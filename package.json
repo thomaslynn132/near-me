@@ -1,0 +1,24 @@
+{
+  "name": "near-me",
+  "version": "1.0.0",
+  "description": "A social and dating application with real-time map-based interaction",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "admin"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:admin\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:admin": "cd admin && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../admin && npm install",
+    "build": "cd frontend && npm run build && cd ../admin && npm run build",
+    "start": "cd backend && npm start",
+    "seed:admin": "cd backend && npm run seed:admin"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
