@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { AlertTriangle, CheckCircle, XCircle, Ban, Eye } from 'lucide-react';
+import { AlertTriangle, CheckCircle, XCircle, Ban } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 interface Report {

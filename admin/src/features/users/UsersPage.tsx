@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { adminApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Search, MoreVertical, Ban, CheckCircle, Trash2, Eye } from 'lucide-react';
+import { Search, Ban, CheckCircle, Trash2, Eye } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 interface User {

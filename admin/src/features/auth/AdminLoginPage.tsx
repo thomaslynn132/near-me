@@ -1,25 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/store';
+import { authApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Shield } from 'lucide-react';
 
-export default function AdminLoginPage() {
+interface AdminLoginPageProps {
+  onLogin: () => void;
+}
+
+export default function AdminLoginPage({ onLogin }: AdminLoginPageProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login, isLoading } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
     try {
-      await login(email, password);
-      navigate('/admin/dashboard');
+      const res = await authApi.login(email, password);
+      const { user, token } = res.data.data;
+      localStorage.setItem('adminToken', token);
+      localStorage.setItem('adminUser', JSON.stringify(user));
+      onLogin();
+      navigate('/admin');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid credentials');
+    } finally {
+      setIsLoading(false);
     }
   };
 

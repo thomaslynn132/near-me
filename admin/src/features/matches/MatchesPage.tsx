@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Heart, Trash2, Eye, Blind } from 'lucide-react';
+import { Heart, Trash2, Eye, EyeOff } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 interface Match {
@@ -100,7 +100,7 @@ export default function MatchesPage() {
                       <TableCell>
                         {match.isBlind ? (
                           <Badge variant="secondary" className="flex items-center gap-1 w-fit">
-                            <Blind className="w-3 h-3" />
+                            <EyeOff className="w-3 h-3" />
                             Blind
                           </Badge>
                         ) : (
