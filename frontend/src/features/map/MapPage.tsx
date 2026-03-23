@@ -1,14 +1,13 @@
-import { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
+import { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useMapStore } from '@/store/mapStore';
-import { useAuthStore } from '@/store/authStore';
-import { userApi, matchApi } from '@/services/api';
+import { userApi } from '@/services/api';
 import { socketService } from '@/services/socket';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { formatDistance } from '@/lib/utils';
-import { Heart, X, MapPin, Users } from 'lucide-react';
+import { Heart, X, MapPin } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
 const customIcon = new L.Icon({
@@ -37,26 +36,61 @@ function LocationMarker() {
   const map = useMap();
   const [position, setPosition] = useState<[number, number] | null>(userLocation);
 
-  useMapEvents({
-    locationfound(e) {
-      const loc: [number, number] = [e.latlng.lat, e.latlng.lng];
-      setPosition(loc);
-      setUserLocation(loc);
-      socketService.updateLocation(loc);
-      map.flyTo(e.latlng, map.getZoom());
-    },
-  });
-
   useEffect(() => {
-    map.locate();
-  }, [map]);
+    if (userLocation) {
+      setPosition(userLocation);
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const loc: [number, number] = [pos.coords.longitude, pos.coords.latitude];
+        setPosition([pos.coords.latitude, pos.coords.longitude]);
+        setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+        socketService.updateLocation(loc);
+        map.flyTo([pos.coords.latitude, pos.coords.longitude], map.getZoom());
+      },
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          alert('Location access denied. Please enable location permissions in your browser settings to use this app.');
+        }
+      },
+      { enableHighAccuracy: true }
+    );
+  }, [map, setUserLocation, userLocation]);
 
   return position === null ? null : <Marker position={position} icon={userIcon} />;
 }
 
+function MapControls({ userLocation, count }: { userLocation: [number, number] | null; count: number }) {
+  const map = useMap();
+  
+  const centerOnUser = () => {
+    if (userLocation) {
+      map.flyTo(userLocation, map.getZoom());
+    }
+  };
+
+  return (
+    <div className="absolute top-4 left-4 right-4 z-[1000] flex justify-between items-center">
+      <button
+        onClick={centerOnUser}
+        className="glass rounded-xl px-4 py-2 flex items-center gap-2 cursor-pointer hover:brightness-110 transition"
+      >
+        <MapPin className="w-5 h-5 text-accent" />
+        <span className="font-semibold">{count} people nearby</span>
+      </button>
+    </div>
+  );
+}
+
 export default function MapPage() {
   const { userLocation, nearbyUsers, setNearbyUsers, selectedUser, setSelectedUser } = useMapStore();
-  const { user } = useAuthStore();
   const [showMatch, setShowMatch] = useState(false);
   const [matchedUser, setMatchedUser] = useState<any>(null);
 
@@ -128,14 +162,8 @@ export default function MapPage() {
             </Popup>
           </Marker>
         ))}
+        <MapControls userLocation={userLocation} count={nearbyUsers.length} />
       </MapContainer>
-
-      <div className="absolute top-4 left-4 right-4 z-[1000] flex justify-between items-center">
-        <div className="glass rounded-xl px-4 py-2 flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-accent" />
-          <span className="font-semibold">{nearbyUsers.length} people nearby</span>
-        </div>
-      </div>
 
       {selectedUser && (
         <div className="absolute bottom-4 left-4 right-4 z-[1000] glass rounded-2xl p-4">

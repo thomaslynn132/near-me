@@ -115,7 +115,6 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.index({ location: '2dsphere' });
-userSchema.index({ email: 1 });
 userSchema.index({ 'location.coordinates': '2d' });
 
 userSchema.pre('save', async function(next) {
