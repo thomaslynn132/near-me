@@ -24,6 +24,7 @@ interface AuthState {
   register: (data: any) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<void>;
+  currentUserId: string | null;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -31,13 +32,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   token: localStorage.getItem('token'),
   isAuthenticated: false,
   isLoading: true,
+  currentUserId: null,
 
   login: async (email: string, password: string) => {
     const res = await authApi.login(email, password);
     const { user, token } = res.data.data;
     localStorage.setItem('token', token);
     socketService.connect(token);
-    set({ user, token, isAuthenticated: true });
+    set({ user, token, isAuthenticated: true, currentUserId: user._id });
   },
 
   register: async (data: any) => {
@@ -45,14 +47,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { user, token } = res.data.data;
     localStorage.setItem('token', token);
     socketService.connect(token);
-    set({ user, token, isAuthenticated: true });
+    set({ user, token, isAuthenticated: true, currentUserId: user._id });
   },
 
   logout: () => {
     authApi.logout();
     socketService.disconnect();
     localStorage.removeItem('token');
-    set({ user: null, token: null, isAuthenticated: false });
+    set({ user: null, token: null, isAuthenticated: false, currentUserId: null });
   },
 
   checkAuth: async () => {
@@ -64,10 +66,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       socketService.connect(token);
       const res = await authApi.getMe();
-      set({ user: res.data.data, isAuthenticated: true, isLoading: false });
+      set({ user: res.data.data, isAuthenticated: true, isLoading: false, currentUserId: res.data.data._id });
     } catch {
       localStorage.removeItem('token');
-      set({ user: null, token: null, isAuthenticated: false, isLoading: false });
+      set({ user: null, token: null, isAuthenticated: false, isLoading: false, currentUserId: null });
     }
   },
 }));

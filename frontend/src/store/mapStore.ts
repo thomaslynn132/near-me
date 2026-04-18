@@ -9,6 +9,8 @@ interface User {
   profileImages: { url: string }[];
   isOnline: boolean;
   distance?: number;
+  location?: { coordinates: number[] | null; isApproximate?: boolean };
+  randomPosition?: [number, number];
 }
 
 interface MapState {

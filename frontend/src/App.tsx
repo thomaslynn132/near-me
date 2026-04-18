@@ -8,13 +8,15 @@ import ChatPage from '@/features/chat/ChatPage';
 import MatchesPage from '@/features/matches/MatchesPage';
 import FriendsPage from '@/features/friends/FriendsPage';
 import ProfilePage from '@/features/profile/ProfilePage';
-import { Map, MessageCircle, Heart, Users, User } from 'lucide-react';
+import FeedPage from '@/features/feed/FeedPage';
+import { Map, MessageCircle, Heart, Users, User, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const location = window.location.pathname;
 
   const navItems = [
+    { href: '/app/feed', icon: Newspaper, label: 'Feed' },
     { href: '/app/map', icon: Map, label: 'Map' },
     { href: '/app/matches', icon: Heart, label: 'Matches' },
     { href: '/app/chat', icon: MessageCircle, label: 'Chat' },
@@ -74,7 +76,7 @@ function App() {
         />
         <Route
           path="/app/*"
-          element={isAuthenticated ? <AppLayout><Routes><Route path="/map" element={<MapPage />} /><Route path="/chat" element={<ChatPage />} /><Route path="/matches" element={<MatchesPage />} /><Route path="/friends" element={<FriendsPage />} /><Route path="/profile" element={<ProfilePage />} /><Route path="*" element={<Navigate to="/app/map" />} /></Routes></AppLayout> : <Navigate to="/auth/login" />}
+          element={isAuthenticated ? <AppLayout><Routes><Route path="/feed" element={<FeedPage />} /><Route path="/map" element={<MapPage />} /><Route path="/chat" element={<ChatPage />} /><Route path="/matches" element={<MatchesPage />} /><Route path="/friends" element={<FriendsPage />} /><Route path="/profile" element={<ProfilePage />} /><Route path="*" element={<Navigate to="/app/feed" />} /></Routes></AppLayout> : <Navigate to="/auth/login" />}
         />
         <Route path="/" element={<Navigate to={isAuthenticated ? '/app/map' : '/auth/login'} />} />
         <Route path="*" element={<Navigate to="/" />} />

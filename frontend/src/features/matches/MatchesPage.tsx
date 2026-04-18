@@ -4,7 +4,7 @@ import { matchApi } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Heart, Eye, EyeOff, MessageCircle } from 'lucide-react';
+import { Heart, Eye, EyeOff } from 'lucide-react';
 
 export default function MatchesPage() {
   const { matches, blindMatches, setMatches, setBlindMatches } = useMatchStore();

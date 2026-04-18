@@ -14,4 +14,14 @@ const connectDB = async () => {
   }
 };
 
+const db = {
+  connect: async () => {
+    await mongoose.connect(config.mongoUri);
+  },
+  disconnect: async () => {
+    await mongoose.disconnect();
+  },
+};
+
 export default connectDB;
+export { db };

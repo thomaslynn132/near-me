@@ -12,6 +12,13 @@ export default {
     apiKey: process.env.CLOUDINARY_API_KEY,
     apiSecret: process.env.CLOUDINARY_API_SECRET,
   },
+  r2: {
+    endpoint: process.env.R2_ENDPOINT,
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+    bucket: process.env.R2_BUCKET || 'near-me',
+    publicUrl: process.env.R2_PUBLIC_URL || 'https://05febd3ef3812c96aeee4d70b4444017.r2.cloudflarestorage.com/near-me',
+  },
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   discoveryRadius: 50,
   blindMatchThreshold: 10,

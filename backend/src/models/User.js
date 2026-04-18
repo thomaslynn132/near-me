@@ -78,6 +78,14 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   likedUsers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -115,7 +123,6 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.index({ location: '2dsphere' });
-userSchema.index({ 'location.coordinates': '2d' });
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();

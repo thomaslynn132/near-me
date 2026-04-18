@@ -13,7 +13,7 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:admin": "cd admin && npm run dev",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../admin && npm install",
+    "install:all": "pnpm install && cd backend && pnpm install && cd ../frontend && pnpm install && cd ../admin && pnpm install",
     "build": "cd frontend && npm run build && cd ../admin && npm run build",
     "start": "cd backend && npm start",
     "seed:admin": "cd backend && npm run seed:admin"

@@ -69,4 +69,22 @@ export const friendApi = {
   removeFriend: (friendId: string) => api.delete(`/friends/${friendId}`),
 };
 
+export const postApi = {
+  getFeed: (page = 1, limit = 20) => api.get('/posts/feed', { params: { page, limit } }),
+  createPost: (data: { content?: string; media?: any[]; privacy?: string }) => api.post('/posts', data),
+  updatePost: (postId: string, data: { content?: string; media?: any[]; privacy?: string }) => api.put(`/posts/${postId}`, data),
+  deletePost: (postId: string) => api.delete(`/posts/${postId}`),
+  likePost: (postId: string) => api.post(`/posts/${postId}/like`),
+  getUserPosts: (userId: string, page = 1, limit = 20) => api.get(`/posts/user/${userId}`, { params: { page, limit } }),
+  getPresignedUrl: (filename: string) => api.get('/posts/presigned-url', { params: { filename } }),
+};
+
+export const followApi = {
+  follow: (userId: string) => api.post(`/users/${userId}/follow`),
+  unfollow: (userId: string) => api.delete(`/users/${userId}/follow`),
+  getFollowers: (userId: string) => api.get(`/users/${userId}/followers`),
+  getFollowing: (userId: string) => api.get(`/users/${userId}/following`),
+  isFollowing: (userId: string) => api.get(`/users/${userId}/is-following`),
+};
+
 export default api;

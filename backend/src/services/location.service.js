@@ -60,6 +60,7 @@ class LocationService {
     }
 
     const radius = radiusKm || currentUser.settings?.discoveryRadius || config.discoveryRadius;
+    const radiusMeters = radius * 1000;
 
     const blockedUsers = [
       ...(currentUser.likedUsers || []),
@@ -68,14 +69,9 @@ class LocationService {
       currentUser._id
     ];
 
-    let visibilityQuery = { visibility: 'public' };
+    let visibilityOr = [{ visibility: 'public' }];
     if (currentUser.friends && currentUser.friends.length > 0) {
-      visibilityQuery = {
-        $or: [
-          { visibility: 'public' },
-          { visibility: 'friends', _id: { $in: currentUser.friends } }
-        ]
-      };
+      visibilityOr.push({ visibility: 'friends', _id: { $in: currentUser.friends } });
     }
 
     const users = await User.aggregate([
@@ -83,11 +79,12 @@ class LocationService {
         $geoNear: {
           near: { type: 'Point', coordinates: [lng, lat] },
           distanceField: 'distance',
-          maxDistance: radius * 1000,
+          maxDistance: radiusMeters,
           spherical: true,
           query: {
             _id: { $nin: blockedUsers },
-            ...visibilityQuery
+            $or: visibilityOr,
+            location: { $exists: true, $ne: null }
           }
         }
       },
@@ -110,7 +107,8 @@ class LocationService {
 
     return users.map(user => ({
       ...user,
-      distance: Math.round(user.distanceKm * 10) / 10
+      distance: Math.round(user.distanceKm * 10) / 10,
+      location: { coordinates: null, isApproximate: true }
     }));
   }
 
