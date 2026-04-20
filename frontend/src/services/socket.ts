@@ -6,7 +6,7 @@ class SocketService {
   connect(token: string) {
     if (this.socket?.connected) return;
 
-    this.socket = io('/', {
+    this.socket = io(import.meta.env.VITE_SOCKET_URL, {
       auth: { token },
       transports: ['websocket'],
     });
